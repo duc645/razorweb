@@ -1,0 +1,78 @@
+@page
+@model cs58.Pages_Blog.IndexModel
+
+@{
+    ViewData["Title"] = "Các bài viết";
+    int i=0;
+}
+
+@* @Url.Page("/Blog/Index", new { p=10}) *@
+
+
+
+
+
+<h1>Danh sách bài viết</h1>
+<form method="get" asp-page="./Index">
+    <label>Tim Kiem</label>
+    <input name="SearchString" value="" />
+    <button type="submit">Tim</button>
+</form>
+
+<p>
+    <a class="btn btn-primary" asp-page="Create">Tạo mới bài viết</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                STT
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Article[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Article[0].Created)
+            </th>
+            @* <th>
+                Content
+            </th>
+            <th>Chuc nang</th> *@
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Article) {
+        <tr>
+            <td>
+                @* @item.Id *@
+                @(++i)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Created)
+            </td>
+            @* <td>
+                 @item.Content
+            </td> *@
+            <td>
+                <a class="btn btn-primary" asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a class="btn btn-info" asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a  class="btn btn-danger" asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+
+        </tr>
+}
+    </tbody>
+</table>
+
+@{
+    var pagingmodel = new XTL.Helpers.PagingModel(){
+        currentpage = Model.currentPage,
+        countpages =    Model.countPages,
+        generateUrl = (int? p) => @Url.Page("/Blog/Index", new { p =p})
+
+    };
+}
+<partial name="_PagingXTL" model="@pagingmodel" />

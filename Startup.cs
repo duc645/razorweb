@@ -67,3 +67,10 @@ namespace cs58
         }
     }
 }
+
+
+/*
+CREATE, READ ,UPDATE , DELETE (CRUD)
+
+lenh (tao ra cac CRUD cho 1 bang nao do) : dotnet aspnet-codegenerator razorpage -m cs58.models.Article -dc cs58.models.MyBlogContext -outDir Pages/Blog -udl --referenceScriptLibraries
+*/ 
