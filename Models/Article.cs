@@ -24,6 +24,8 @@ namespace cs58.models
         [Display(Name="Nội dung")]
         public string Content {get;set;}
 
+        
+
         //tiep theo la tao ra dbcontext : bieu dien cau truc csdl
     }
 }

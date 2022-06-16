@@ -1,3 +1,6 @@
+using System.Net.Mime;
+using System.Net;
+using System.Security.Authentication;
 using System.Net.NetworkInformation;
 using System.Buffers;
 using System.Reflection;
@@ -18,6 +21,10 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using cs58.models;
 
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Routing;
 namespace cs58
 {
     public class Startup
@@ -37,6 +44,12 @@ namespace cs58
                 string connectstring = Configuration.GetConnectionString("MyBlogContext");
                 options.UseSqlServer(connectstring);
             });
+
+            //Dang ky Identity
+            services.AddIdentity<AppUser, IdentityRole>()
+                    .AddEntityFrameworkStores<MyBlogContext>()
+                    .AddDefaultTokenProviders();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,13 +70,17 @@ namespace cs58
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
             });
+
+            // IdentityUser user;
+            // IdentityDbContext context;
         }
     }
 }
@@ -74,3 +91,12 @@ CREATE, READ ,UPDATE , DELETE (CRUD)
 
 lenh (tao ra cac CRUD cho 1 bang nao do) : dotnet aspnet-codegenerator razorpage -m cs58.models.Article -dc cs58.models.MyBlogContext -outDir Pages/Blog -udl --referenceScriptLibraries
 */ 
+
+
+/*
+Identity : 
+cung cấp các chức năng :
+    -Authentication : Xác định danh tính -> Login , Logout, ...
+    -Authorization : xác thực quyền truy cập ,...
+    - Quản lý user : Sign up , user , Role ,....
+*/

@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 // using Microsoft.EntityFrameworkCore.DbContext;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 namespace cs58.models{
-   public class MyBlogContext : DbContext
+   public class MyBlogContext : IdentityDbContext<AppUser>
    {
       
        public MyBlogContext(DbContextOptions<MyBlogContext> options) : base(options)
