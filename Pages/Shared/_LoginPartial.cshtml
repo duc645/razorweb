@@ -1,0 +1,17 @@
+@using Microsoft.AspNetCore.Identity
+@using cs58.models
+
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+
+<ul class="navbar-nav">
+
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login" >Đăng nhập</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register" >Đăng ký</a>
+    </li>
+</ul>
+@* nav-link : bo gach chan cua link khi hover *@

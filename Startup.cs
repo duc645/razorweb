@@ -46,10 +46,42 @@ namespace cs58
             });
 
             //Dang ky Identity
-            services.AddIdentity<AppUser, IdentityRole>()
+            // services.AddIdentity<AppUser, IdentityRole>()
+            //         .AddEntityFrameworkStores<MyBlogContext>()
+            //         .AddDefaultTokenProviders();
+            
+
+            //su dung dang nhap, dk,dang xuat voi giao dien mac dinh
+            services.AddDefaultIdentity<AppUser>()
                     .AddEntityFrameworkStores<MyBlogContext>()
                     .AddDefaultTokenProviders();
+            
+            // Truy cập IdentityOptions
+            services.Configure<IdentityOptions> (options => {
+                // Thiết lập về Password
+                options.Password.RequireDigit = false; // Không bắt phải có số
+                options.Password.RequireLowercase = false; // Không bắt phải có chữ thường
+                options.Password.RequireNonAlphanumeric = false; // Không bắt ký tự đặc biệt
+                options.Password.RequireUppercase = false; // Không bắt buộc chữ in
+                options.Password.RequiredLength = 3; // Số ký tự tối thiểu của password
+                options.Password.RequiredUniqueChars = 1; // Số ký tự riêng biệt
 
+                // Cấu hình Lockout - khóa user
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes (5); // Khóa 5 phút
+                options.Lockout.MaxFailedAccessAttempts = 5; // Thất bại 5 lầ thì khóa
+                options.Lockout.AllowedForNewUsers = true;
+
+                // Cấu hình về User.
+                options.User.AllowedUserNameCharacters = // các ký tự đặt tên user
+                    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                options.User.RequireUniqueEmail = true;  // Email là duy nhất
+
+                // Cấu hình đăng nhập.
+                options.SignIn.RequireConfirmedEmail = true;            // Cấu hình xác thực địa chỉ email (email phải tồn tại)
+                options.SignIn.RequireConfirmedPhoneNumber = false;     // Xác thực số điện thoại
+
+            });
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -99,4 +131,12 @@ cung cấp các chức năng :
     -Authentication : Xác định danh tính -> Login , Logout, ...
     -Authorization : xác thực quyền truy cập ,...
     - Quản lý user : Sign up , user , Role ,....
+
+-Cac trang :
+    /Identity/Account/Login : dang nhap
+    /Identity/Account/Manage : quan ly tai khoan
+
+    cac file razor identity dc mac dinh chay trong : Areas/Identity/Pages 
+    => dat file _ViewStart(de thay doi layout cho cac trang identity
+    (cac trang identity co layout mac dinh rieng)) o trong duong dan thu muc nay
 */

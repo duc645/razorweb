@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using cs58.models;
 
 namespace cs58.Migrations
 {
     [DbContext(typeof(MyBlogContext))]
-    partial class MyBlogContextModelSnapshot : ModelSnapshot
+    [Migration("20220618105229_addIdentity")]
+    partial class addIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -168,10 +170,6 @@ namespace cs58.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("HomeAdress")
-                        .HasMaxLength(400)
-                        .HasColumnType("nvarchar(400)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");

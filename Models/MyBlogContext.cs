@@ -1,3 +1,4 @@
+using System.Security.Authentication.ExtendedProtection;
 using Microsoft.EntityFrameworkCore;
 // using Microsoft.EntityFrameworkCore.DbContext;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -16,6 +17,15 @@ namespace cs58.models{
        
        protected override void OnModelCreating(ModelBuilder modelBuilder){
            base.OnModelCreating(modelBuilder);
+
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var tableName = entityType.GetTableName();
+                if(tableName.StartsWith("AspNet")){
+                    entityType.SetTableName(tableName.Substring(6));
+                }
+                
+            }
        }
 
 
