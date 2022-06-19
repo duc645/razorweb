@@ -1,3 +1,4 @@
+using System.Transactions;
 using System.Net.Mime;
 using System.Net;
 using System.Security.Authentication;
@@ -45,16 +46,26 @@ namespace cs58
                 options.UseSqlServer(connectstring);
             });
 
-            //Dang ky Identity
-            // services.AddIdentity<AppUser, IdentityRole>()
-            //         .AddEntityFrameworkStores<MyBlogContext>()
-            //         .AddDefaultTokenProviders();
-            
 
-            //su dung dang nhap, dk,dang xuat voi giao dien mac dinh
-            services.AddDefaultIdentity<AppUser>()
+            services.AddOptions();
+            var mailsetting = Configuration.GetSection("MailSettings");
+            services.Configure<MailSettings>(mailsetting);
+            // mailsetting chua de lieu cua MailSettings trong appsettings.json
+            //  dang ky MailSetting vao ung dung , lop nay lay du lieu tu mailsetting
+            // MailSetting se duoc inject vao lop SendMailService khi dich vu nay dc tao ra
+            services.AddSingleton<IEmailSender, SendMailService>();
+            //dang ky dich vu IEmailSender dc tao ra tu SendMailService
+
+            //Dang ky Identity
+            services.AddIdentity<AppUser, IdentityRole>()
                     .AddEntityFrameworkStores<MyBlogContext>()
                     .AddDefaultTokenProviders();
+            
+
+            //su dung dang nhap, dk,dang xuat voi giao dien mac dinh ,default
+            // services.AddDefaultIdentity<AppUser>()
+            //         .AddEntityFrameworkStores<MyBlogContext>()
+            //         .AddDefaultTokenProviders();
             
             // Truy cập IdentityOptions
             services.Configure<IdentityOptions> (options => {
@@ -139,4 +150,9 @@ cung cấp các chức năng :
     cac file razor identity dc mac dinh chay trong : Areas/Identity/Pages 
     => dat file _ViewStart(de thay doi layout cho cac trang identity
     (cac trang identity co layout mac dinh rieng)) o trong duong dan thu muc nay
+
+
+
+-phat sinh code cua cac trang Identity
+=>dotnet aspnet-codegenerator identity -dc cs58.models.MyBlogContext
 */

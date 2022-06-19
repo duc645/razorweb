@@ -4,14 +4,43 @@
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
 
+@{
+    @* this.User la mot thuoc tinh co san trong viewcshtml, controller, pagamemodel , view ,... 
+    -> luu thong tin dang nhap cua user 
+    -> thuoc tinh nay duoc thiet lap trong moi truy van cua 2 middleware 
+    : UseAuthentication , UseAuthorization*@
+    
 
+    @* SignInManager.IsSignedIn(User) tra ve true la User nay da dang nhap , nguoc lai tra
+    ve false *@
+
+    @* UserManager.GetUserName(User) : lay ten cua User *@
+}
 <ul class="navbar-nav">
-
+    @* Neu co thong tin da dang nhap thi .. khong co thi ... *@
+    @if(SignInManager.IsSignedIn(User))
+    {
+    <li class="nav-item">
+    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" >
+    Xin chào @UserManager.GetUserName(User)
+    </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Logout" >Đăng xuất</a>
+    </li>
+    }
+    else 
+    {
     <li class="nav-item">
         <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login" >Đăng nhập</a>
     </li>
     <li class="nav-item">
         <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register" >Đăng ký</a>
     </li>
+    }
+    
 </ul>
 @* nav-link : bo gach chan cua link khi hover *@
+@* SignInManager<AppUser> SignInManager
+ UserManager<AppUser> UserManager 
+    => quan ly trang thai dang nhap , dang xuat  *@
