@@ -8,9 +8,14 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using cs58.models;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authorization;
 
 namespace cs58.Pages_Blog
 {
+    // quyen truy cap , su dung cai nay thi phai dky
+    [Authorize] 
+
+    
     public class IndexModel : PageModel
     {
         private readonly cs58.models.MyBlogContext _context;

@@ -1,3 +1,5 @@
+using System.Xml.Linq;
+using System.IO;
 using System.Transactions;
 using System.Net.Mime;
 using System.Net;
@@ -90,9 +92,19 @@ namespace cs58
                 // Cấu hình đăng nhập.
                 options.SignIn.RequireConfirmedEmail = true;            // Cấu hình xác thực địa chỉ email (email phải tồn tại)
                 options.SignIn.RequireConfirmedPhoneNumber = false;     // Xác thực số điện thoại
-
+                
+                //NG DUNG PHAI XAC NHAN EMAIL MOI CHO DANG NHAP
+                //neu thiet lap la true se khong cho dang nhap ma chuyen huong toi 
+                //registerConfirmAccount
+                options.SignIn.RequireConfirmedAccount = true;
             });
             
+            services.ConfigureApplicationCookie(options => {
+                options.LoginPath = "/login/";
+                options.LogoutPath = "/logout/";
+                options.AccessDeniedPath = "/khongduoctruycap.html";
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
