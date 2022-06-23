@@ -1,3 +1,5 @@
+using System.Resources;
+using System.ComponentModel.DataAnnotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,19 +27,30 @@ namespace cs58.Areas.Identity.Pages.Account
 
         public void OnGet()
         {
+            // _signInManager.IsSignedIn(User); //=> de kiểm tra xem user có đăng nhập ko
+            //User.Identity.IsAuthenticated -> cách khác để kt xem có user đăng nhập ko
+            
         }
 
         public async Task<IActionResult> OnPost(string returnUrl = null)
         {
+            //returnUrl la tham so truyen vao(o tren url vd int id => /login/3 ...) , mac dinh la ko co gi
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
+
+                //neu url co tham so thi chuyen den trang co tham so 
+                //neu ko thi quay lai trang hien tai
             if (returnUrl != null)
             {
+                //neu url co tham so thi chuyen den trang co tham so 
+                //neu ko thi quay lai trang hien tai
                 return LocalRedirect(returnUrl);
             }
             else
             {
-                return RedirectToPage();
+                returnUrl = Url.Content("~/");
+                // return RedirectToPage();//trang hien tai
+                return LocalRedirect(returnUrl);
             }
         }
     }

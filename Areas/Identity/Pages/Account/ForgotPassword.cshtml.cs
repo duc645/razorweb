@@ -31,8 +31,8 @@ namespace cs58.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage="Phải nhập địa chỉ email")]
+            [EmailAddress(ErrorMessage="Nhập sai định dạng email")]
             public string Email { get; set; }
         }
 
@@ -41,12 +41,14 @@ namespace cs58.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(Input.Email);
+                //nếu ko tìm thấy user hoặc email  nhập vào chưa xác thực địa chỉ email
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
                     return RedirectToPage("./ForgotPasswordConfirmation");
                 }
 
+                //trường hợp nhập đúng email
                 // For more information on how to enable account confirmation and password reset please 
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -60,7 +62,7 @@ namespace cs58.Areas.Identity.Pages.Account
                 await _emailSender.SendEmailAsync(
                     Input.Email,
                     "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    $"Hãy bấm vào  <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>đây</a> để lấy lại mật khẩu.");
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }
