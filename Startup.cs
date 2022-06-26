@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+using System.IO.Pipes;
 using System.Xml.Linq;
 using System.IO;
 using System.Transactions;
@@ -105,6 +107,16 @@ namespace cs58
                 options.AccessDeniedPath = "/khongduoctruycap.html";
             });
 
+
+            services.AddAuthentication()
+                    .AddGoogle(options => {
+                         var gconfig = Configuration.GetSection("Authentication:Google");
+                        options.ClientId = gconfig["ClientId"];
+                        options.ClientSecret = gconfig["ClientSecret"];
+                        //https://localhost:5001/signin-google
+                        options.CallbackPath = "/dang-nhap-tu-google";
+
+                    });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

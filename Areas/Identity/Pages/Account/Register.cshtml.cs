@@ -1,3 +1,5 @@
+using System.Data.Common;
+using System.ComponentModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -42,7 +44,11 @@ namespace cs58.Areas.Identity.Pages.Account
 
         public string ReturnUrl { get; set; }
 
+        //khai báo một list có kiểu AuthenticationScheme 
+        //để lưu các provider ngoài(gg,face,ins,...)
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
+
+        
 
         public class InputModel
         {
@@ -72,7 +78,16 @@ namespace cs58.Areas.Identity.Pages.Account
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
+
+            //goi phuowng thuoc GetExternalAuthenticationSchemesAsync cua _signInManager
+            //để lấy các provider(gg,face,ins,twiter,,...) là dịch vụ ngoài
+            //rồi chuyển thành list lưu vào ExternalLogins
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+        //     foreach (var provider in ExternalLogins)
+        //     {
+        //         _logger.LogInformation(provider.Name);
+        //     }
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)

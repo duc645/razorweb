@@ -3,9 +3,24 @@
 
 @{
     ViewData["Title"] = "Đăng nhập";
+    //this.TempData["ErrorMessage"]
+
+    // cái này để kiểm tra xem có lỗi ở ErrorMessage hay ko
+    //this.TempData.ContainsKey("ErrorMessage")
+
+    //gán lỗi vào biến để chuyền vào trang cshtml _StatuMessage
+    var thongbao = TempData["ErrorMessage"];
 }
 
 <h1>@ViewData["Title"]</h1>
+
+@* Kiểm tra xem có lỗi đc truyền vào ko *@
+@if(TempData.ContainsKey("ErrorMessage"))
+{
+    //hiển thị lỗi dùng template _StatusMessage 
+    //chỉ cần chuyền vào trang này model một biến kiểu string là đc
+    <partial name="/Areas/Identity/Pages/Account/_StatusMessage.cshtml" model = "thongbao" />
+}
 <div class="row">
     <div class="col-md-4">
         <section>
@@ -68,7 +83,11 @@
                             <p>
                                 @foreach (var provider in Model.ExternalLogins)
                                 {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                    //du lieu submit den asp-page : ExternalLogins nằm trong key name là provider , giá trị nó submit đến nằm trong thuộc tính value
+                                    //vd có google thì nó submit provider = google
+                                    //vd cos thêm facebook thì vẫn tên là provider = facebook
+                                    //trang ExternalLogins nhận đc thì nó sẽ xử lý trong OnPost
+                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Đăng nhập với tài khoản @provider.DisplayName">@provider.DisplayName</button>
                                 }
                             </p>
                         </div>
