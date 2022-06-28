@@ -57,23 +57,27 @@ namespace cs58.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
+
+            //Kiểm tra xem password người dùng nhập có đúng hay ko
             RequirePassword = await _userManager.HasPasswordAsync(user);
             if (RequirePassword)
             {
                 if (!await _userManager.CheckPasswordAsync(user, Input.Password))
                 {
-                    ModelState.AddModelError(string.Empty, "Incorrect password.");
+                    ModelState.AddModelError(string.Empty, "Sai mật khẩu");
                     return Page();
                 }
             }
 
+            //XÓA TÀI KHOẢN
             var result = await _userManager.DeleteAsync(user);
             var userId = await _userManager.GetUserIdAsync(user);
             if (!result.Succeeded)
             {
                 throw new InvalidOperationException($"Unexpected error occurred deleting user with ID '{userId}'.");
             }
-
+            //SAU KHI XÓA thì tiến hành đăng xuất
+            //rồi chuyển hướng về trang chủ
             await _signInManager.SignOutAsync();
 
             _logger.LogInformation("User with ID '{UserId}' deleted themselves.", userId);

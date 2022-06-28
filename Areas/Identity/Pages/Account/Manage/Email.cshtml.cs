@@ -11,9 +11,11 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace cs58.Areas.Identity.Pages.Account.Manage
 {
+    [Authorize]
     public partial class EmailModel : PageModel
     {
         private readonly UserManager<AppUser> _userManager;
@@ -46,7 +48,7 @@ namespace cs58.Areas.Identity.Pages.Account.Manage
         {
             [Required]
             [EmailAddress]
-            [Display(Name = "New email")]
+            [Display(Name = "Địa chỉ email mới")]
             public string NewEmail { get; set; }
         }
 
@@ -103,13 +105,13 @@ namespace cs58.Areas.Identity.Pages.Account.Manage
                 await _emailSender.SendEmailAsync(
                     Input.NewEmail,
                     "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    $"Bấm vào  <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>đây</a>. để đổi email");
 
-                StatusMessage = "Confirmation link to change email sent. Please check your email.";
+                StatusMessage = "Hãy mở email mới để xác nhận.";
                 return RedirectToPage();
             }
 
-            StatusMessage = "Your email is unchanged.";
+            StatusMessage = "Email chưa đc thay đổi .";
             return RedirectToPage();
         }
 
