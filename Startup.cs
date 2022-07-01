@@ -1,3 +1,4 @@
+using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.IO.Pipes;
 using System.Xml.Linq;
@@ -30,6 +31,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Routing;
+using App.Services;
 namespace cs58
 {
     public class Startup
@@ -117,6 +119,9 @@ namespace cs58
                         options.CallbackPath = "/dang-nhap-tu-google";
 
                     });
+            //khi lấy ra dịch vụ  IdentityErrorDescriber , thì nó sẽ lấy ra một đối tượng
+            //lớp  AppIdentityErrorDescriber
+            services.AddSingleton<IdentityErrorDescriber,AppIdentityErrorDescriber>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -165,7 +170,19 @@ Identity :
 cung cấp các chức năng :
     -Authentication : Xác định danh tính -> Login , Logout, ... => hết bài 64 cơ bản hoàn thành
     -Authorization : xác thực quyền truy cập ,có quyền truy cập những trang nào, có thể làm những gì...
-    - Quản lý user : Sign up , user , Role ,....
+        xác thực quyền dựa vào vai trò :  Role-based authorization
+        +thông tin về zole đc lưu trữ trong bảng role
+        +trên ứng dụng tạo ra nhiều role , user sẽ đc gán 1 hoặc nhiều zole
+        +vd : Role : (Admin, Edit , Role ,Manager,Member ....)
+        +Trong identity có 1 dịch vụ để quản lý các role
+        =>RoleManager<IdentityRole>, đối tượng nó quản lý có kiểu IdentityRole
+        =>với các phương thức tạo ra role mới, xóa role , lấy role theo id hoặc tên, CreateAsync,FindById,RoleExistsAsync(Kiểm tra sự tồn tại của IdentityRole theo tên của nó),...
+        +Việc đầu tiên là phải tạo ra các trang quản lý Role : index, Create,Delete Edit
+        +dùng lệnh để tạo nhanh các page : dotnet new page -n Index -o Areas/Admin/Pages/Role -na App.Admin.Role
+        dotnet new page -n Create -o Areas/Admin/Pages/Role -na App.Admin.Role
+
+        +giải thích : -n là tên trang ,-o là lưu ở đâu ,-na là tên namespace
+    - Quản lý user : Sign up , user 
 
 -Cac trang :
     /Identity/Account/Login : dang nhap
@@ -180,3 +197,41 @@ cung cấp các chức năng :
 -phat sinh code cua cac trang Identity
 =>dotnet aspnet-codegenerator identity -dc cs58.models.MyBlogContext
 */
+
+//chuyển lỗi thành tiếng việt 23:57 video cs65 , tạo lớp kế thừa IdentityErrorDescriber
+//inject trong file startup và ghi đè lại phương thức hiển thị lỗi mà muốn 
+//chuyển sang tiếng việt
+
+
+//  Muốn thêm nhiều User phải migrations . cs65 40:00
+//dotnet ef migrations list : danh sách các migrations
+//dotnet ef migrations add SeedUsers
+//rồi vào file migrations vừa tạo , vào phương thức up, thêm code :
+/*
+            for (int i=1 ;i< 150 ;i++){
+                migrationBuilder.InsertData(
+                    "Users",
+                    columns: new[] {},
+                    values : new object[] {}
+                )
+            }
+*/
+// sau khi viết code tự động sinh ra các user xong , thực hiện lệnh
+//dotnet ef database update
+
+
+
+//phân trang copy lại code , xem 43:45 bài cs65
+
+//phần hiển thị các role của User ra ngoài trang index ,khó hiểu
+//vì AppUser hay trong bang User ko có trường Role 
+//nên tạo ra một lớp mới kế thừa lớp AppUser
+//xem cs65 1:01:00
+
+
+
+//Bây giờ đến bước sử dụng role đc gán cho user để xác thực quyền truy cập cho user
+//ta sử dụng atribute [Authorize] - có thể thiết lập cho Controller , tới từng 
+//action của controller. Nhưng trong PageModel nó chỉ thiết lập cho PageModel(cấp độ class) đó thôi
+//ko thiết lập đc cho từng handler-> mặc định , muốn sử dụng đc [Authorize] thì user 
+//phải đăng nhập

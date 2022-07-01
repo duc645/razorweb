@@ -1,0 +1,27 @@
+﻿@page "/admin/delete-role/{roleid}"
+@model App.Admin.Role.DeleteModel
+@{
+    ViewData["Title"] = "Xóa role";
+}
+<h4>@ViewData["Title"]</h4>
+
+<partial name="_StatusMessage" model="@Model.StatusMessage"></partial>
+<hr>
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <h1>Bạn có chắc muốn xóa Role<strong> @Model.role.Name </strong></h1>
+            <div class="form-group">
+                <input type="submit" value="Đồng ý" class="btn btn-danger" />
+                <a class ="btn btn-info" asp-page="./Index">Danh sách các Role</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@* validate dữ liệu , file này trong page/shared *@
+@* tác dụng là : mình ko cần ấn submit, chỉ cần nhập vào ô là nó hiện ngay validate lỗi ở dưới ô nhập *@
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
