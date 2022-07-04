@@ -20,7 +20,9 @@ using cs58.models;
 using Microsoft.AspNetCore.Authorization;
 namespace App.Admin.Role
 {
-    [Authorize(Roles = "Admin")]  
+    // [Authorize(Roles = "Admin")]  
+    [Authorize(Policy = "AllowEditRole")]  
+
     public class EditModel : RolePageModel
     {
 

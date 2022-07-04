@@ -22,7 +22,7 @@ namespace App.Admin.User
      // [Authorize(Roles = "VipMember")]
      // [Authorize(Roles = "Editor")]
 
-    [Authorize(Roles = "Admin")]  
+    // [Authorize(Roles = "Admin")]  
     //TH2: [Authorize(Roles = "role1,role2,role3")]
     // => user nào có 1 TRONG 3 cái vai trò trên sẽ đc truy cập => giống với phép toán HOẶC
     // [Authorize(Roles = "Admin,VipMember,Editor")]

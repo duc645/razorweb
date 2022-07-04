@@ -122,6 +122,18 @@ namespace cs58
             //khi lấy ra dịch vụ  IdentityErrorDescriber , thì nó sẽ lấy ra một đối tượng
             //lớp  AppIdentityErrorDescriber
             services.AddSingleton<IdentityErrorDescriber,AppIdentityErrorDescriber>();
+
+            services.AddAuthorization(options =>{
+                options.AddPolicy("AllowEditRole", policyBuilder => {
+                    //điều kiện của policy
+                    //phai dang nhap , phai co vai tro admin va editor
+                    policyBuilder.RequireAuthenticatedUser();
+                    policyBuilder.RequireRole("Admin");
+                    policyBuilder.RequireRole("Editor");
+                    policyBuilder.RequireClaim("ten claim")
+
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -235,3 +247,59 @@ cung cấp các chức năng :
 //action của controller. Nhưng trong PageModel nó chỉ thiết lập cho PageModel(cấp độ class) đó thôi
 //ko thiết lập đc cho từng handler-> mặc định , muốn sử dụng đc [Authorize] thì user 
 //phải đăng nhập
+
+
+//cs66 : xác thực quyền truy cập theo :
+// -Policy-based authorization :xác thực theo chính sách
+// -Claims-based authorization :xác thực theo tính chất,đặc tính của user
+
+//Policy : Tạo ra các chính sách(policy) 
+//bên trong policy là các đoạn code ,tại đó nó kiểm tra user thỏa mã điều kiện đặt ra
+//Để tạo ra các policy thì vào file startup , trong phương thức ConfigureServices
+/*
+            services.AddAuthorization(options =>{
+                options.AddPolicy("TenPolicy",policyBuilder=> {
+                    //user do phai dang nhap
+                    policyBuilder.RequireAuthenticatedUser 
+                    //user do phai co nhung claim
+                    policyBuilder.RequireClaim 
+                    //phai co role
+                    policyBuilder.Role()
+                    policyBuilder.UserName()
+                    policyBuilder.RequireClaim("ten claim","giá trị mà tên claim có thể nhận","giatri2","giatri3")
+                    hoặc :
+                    policyBuilder.RequireClaim("ten claim", new string[]{
+                        "giatri1",
+                        "giatri2",
+                    })
+
+                });
+                //tạo ra nhiều policy nữa ở đây
+                options.AddPolicy("TENPOLICY2",policyBuilder=> {
+                    //điều kiện của policy
+                });
+            });
+*/
+// Claims la mot dac tinh , tinh chat cua doi tuong(user)
+//ví dụ có tấm bằng lái B2(được coi là vai trò- Role)
+//cứ có tấm bằng này thì đc lái xe 4 chỗ
+//tren bang lai co :
+// +ngay sinh -> dc coi la claim
+// +Noi sinh -> dc coi la claim (dac tinh mo ta ve nguoi)
+
+//vd khac : mua rượu (> 18 tuổi)
+// -Việc kiểm tra ngày sinh : gọi là xác thực quyền theo claim, theo tính chất của đối tượng
+// Claims-based authorization
+
+//trong Identity căn cứ theo bảng csdl , dbcontext bảng RoleClaim là đối tượng có kiểu
+//IdentityRoleClaim<string> claim1; :là cái model tương ứng với những phần tử của bảng RoleClaims
+//tương tự như vậy cái model tương ứng với những phần tử của bảng UserClaims,
+//thì đó là các đối tượng kiểu IdentityUserClaim<string> claim2;
+//TRONG IdentityRoleClaim<string> claim1,IdentityUserClaim<string> claim2
+//có các trường dự liệu ClaimType , ClaimValue ,... chính là các cột của 1 một bảng
+//
+// Khi sử dụng các dịch vụ của Identty để truy vấn lấy ra những claim của một Roles ,
+//hay là lấy ra claim của một Users thì nó ko trả về đối tượng IdentityUserClaim<string> claim2
+//hay IdentityRoleClaim<string> claim1 mà nó thường trả về đối tượng 
+//Claim claim3 : cái này nó khác với hai cái trên là ko có trường dữ liệu id
+//các trường khác nó vẫn có
